@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
-from app.models.user_model import User
+from app.models.usuario_model import Usuario
 
 class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, user: User):
+    def create(self, user: Usuario):
         try:
             self.db.add(user)
             self.db.commit()
@@ -15,5 +15,5 @@ class UserRepository:
             self.db.rollback()
             raise
 
-    def get_by_email(self, email: str) -> User:
-        return self.db.query(User).filter(User.email == email).first()
+    def get_by_email(self, email: str) -> Usuario:
+        return self.db.query(Usuario).filter(Usuario.email == email).first()

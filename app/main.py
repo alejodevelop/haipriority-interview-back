@@ -1,30 +1,21 @@
 from fastapi import FastAPI
+import uvicorn
 from app.database import Base, engine
-from app.controllers import user_controller
+from app.config import settings, origins
+from app.routers import register_routers
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.middleware.exception_handler import ExceptionHandlerMiddleware
 
-# Initialize the FastAPI application
+# Inicializa la aplicación FastAPI
 app = FastAPI(
-    title="My FastAPI App",
-    description="API para manejar usuarios y otros recursos",
-    version="1.0.0",
-    docs_url="/docs",  # URL para Swagger UI
-    redoc_url="/redoc"  # URL para Redoc
+    title=settings.TITLE,
+    description=settings.DESCRIPTION,
+    version=settings.VERSION,
+    docs_url=settings.DOCS_URL,
+    redoc_url=settings.REDOC_URL,
 )
 
-# Startup event handler
-@app.on_event("startup")
-async def startup_event():
-    Base.metadata.create_all(bind=engine)
-
-# Configuración de CORS
-origins = [
-    "http://localhost",
-    "http://localhost:3000",  # Para conexiones con frontend como React o Angular
-]
-
+# Configura el CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -33,13 +24,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Evento de inicio (startup) para crear las tablas de la base de datos si aun no existen
+@app.on_event("startup")
+async def startup_event():
+    Base.metadata.create_all(bind=engine)
+
 # Agregar el middleware de manejo de excepciones
 app.add_middleware(ExceptionHandlerMiddleware)
 
-# Registra los routers de los controladores
-app.include_router(user_controller.router)
+# Registra los routers
+register_routers(app)
 
-# Punto de entrada para que la aplicación corra
+# Punto de entrada para ejecutar la aplicación
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
