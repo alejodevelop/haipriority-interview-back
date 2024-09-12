@@ -1,18 +1,23 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
+from sqlalchemy.orm import Session
+
+from app.database import get_db
 from app.schemas.usuario_schema import UsuarioCreate, UsuarioResponse
-from app.services.usuario_service import UserService
+from app.services.usuario_service import UsuarioService
 from app.utils.auth import get_current_user
 from app.utils.logging_config import logger
 
 router = APIRouter()
 
-@router.post("/users/", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
-def create_user(user: UsuarioCreate):
-    return UserService().create_user(user)
 
-@router.get("/users/", status_code=status.HTTP_201_CREATED)
-def get_user(current_user: Annotated[dict , Depends(get_current_user)]):
+@router.post("/usuario", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
+def create_usuario(user: UsuarioCreate, db: Session = Depends(get_db)):
+    return UsuarioService(db).create_usuario(user)
+
+
+@router.get("/usuarios", status_code=status.HTTP_201_CREATED)
+def get_usuarios(current_user: Annotated[dict, Depends(get_current_user)]):
     logger.info(current_user)
     return "Ejemplo de usuario"
