@@ -5,6 +5,7 @@ from app.config import settings, origins
 from app.routers import register_routers
 from fastapi.middleware.cors import CORSMiddleware
 from app.middleware.exception_handler import ExceptionHandlerMiddleware
+from app.models.events import audit_events
 
 # Inicializa la aplicación FastAPI
 app = FastAPI(
@@ -24,10 +25,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Evento de inicio (startup) para crear las tablas de la base de datos si aun no existen
 @app.on_event("startup")
 async def startup_event():
     Base.metadata.create_all(bind=engine)
+
 
 # Agregar el middleware de manejo de excepciones
 app.add_middleware(ExceptionHandlerMiddleware)

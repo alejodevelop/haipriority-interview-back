@@ -21,7 +21,7 @@ def get_db():
 
 # Importo los modelos para que sqlalchemy los cree en la base de datos
 from app.models.user_model import User
-from app.models.payment_model import Payment
 from app.models.loan_model import Loan
 from app.models.debitcard_model import DebitCard
 from app.models.creditcard_model import CreditCard
+from app.models.auditlog_model import AuditLog

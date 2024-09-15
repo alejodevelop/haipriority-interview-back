@@ -28,6 +28,9 @@ class LoanService:
         if loan.amount > credit_limit:
             raise ValueError("Our AI system has determined that you are not eligible to borrow this amount")
 
+        if loan.amount <= 0:
+            raise ValueError("you can't borrow 0 or less")
+
         debit_card = Loan(
             user_id=user_id,
             amount=loan.amount,
