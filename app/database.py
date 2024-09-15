@@ -10,9 +10,18 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+# Importo los modelos para que sqlalchemy los cree en la base de datos
+from app.models.user_model import User
+from app.models.payment_model import Payment
+from app.models.loan_model import Loan
+from app.models.debitcard_model import DebitCard
+from app.models.creditcard_model import CreditCard

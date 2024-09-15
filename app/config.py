@@ -11,5 +11,5 @@ settings = Settings()
 # Configuración de CORS
 origins = [
     "http://localhost",
-    "http://localhost:3000",  # Para frontend como React o Angular
+    "http://localhost:4200",
 ]
