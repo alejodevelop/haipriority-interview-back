@@ -2,7 +2,7 @@ from openai import OpenAI
 
 from app.utils.logging_config import logger
 
-client = OpenAI()
+# client = OpenAI()
 
 import openai
 import os
