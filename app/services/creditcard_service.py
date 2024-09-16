@@ -30,7 +30,7 @@ class CreditCardService:
         credit_limit = calculate_credit_limit(user_id)  # AI FEATURE
 
         if 0 >= credit_limit:
-            raise ValueError("Our AI system has determined that you are not eligible to receive a credit card")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Our AI system has determined that you are not eligible to receive a credit card")
 
         debit_card = CreditCard(
             user_id=user_id,
@@ -61,7 +61,7 @@ class CreditCardService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=CREDITCARD_NOT_FOUND)
 
         if existing_creditcard.credit_limit < existing_creditcard.balance + amount:
-            raise ValueError("Insufficient funds, credit limit exceeded")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Insufficient funds, credit limit exceeded")
 
         existing_creditcard.balance += amount
 
@@ -73,7 +73,7 @@ class CreditCardService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=CREDITCARD_NOT_FOUND)
 
         if 0 > existing_creditcard.balance - amount:
-            raise ValueError("you can't pay more than the total debt")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="you can't pay more than the total debt")
 
         existing_creditcard.balance -= amount
 

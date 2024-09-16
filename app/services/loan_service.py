@@ -26,10 +26,11 @@ class LoanService:
         interest_rate = interest_rate_calculator(user_id, loan.amount)  # AI FEATURE
 
         if loan.amount > credit_limit:
-            raise ValueError("Our AI system has determined that you are not eligible to borrow this amount")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="Our AI system has determined that you are not eligible to borrow this amount")
 
         if loan.amount <= 0:
-            raise ValueError("you can't borrow 0 or less")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="you can't borrow 0 or less")
 
         debit_card = Loan(
             user_id=user_id,
@@ -51,7 +52,8 @@ class LoanService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=LOAN_NOT_FOUND)
 
         if 0 > existing_loan.balance - amount:
-            raise ValueError("you can't pay more than the total debt")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="you can't pay more than the total debt")
 
         existing_loan.balance -= amount
 

@@ -26,6 +26,9 @@ class DebitCardService:
             card_number = generate_card_number()
             card_number_exists = self.repository.get_by_card_number(card_number)
 
+        if debitcard.balance < 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Balance must be greater than 0")
+
         debit_card = DebitCard(
             user_id=user_id,
             card_number=card_number,
